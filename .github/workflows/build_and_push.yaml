@@ -1,0 +1,22 @@
+name: Build and Push Teleskope backend
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: build and push
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.AWS_ECR_USERNAME }}
+          password: ${{ secrets.AWS_ECR_PASSWORD }}
+          repository: public.ecr.aws/l3s2y4l6/y2-pingdom-controller
+          tag_with_ref: true
+          tag_with_sha: true
