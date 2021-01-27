@@ -5,7 +5,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "ttt"
     pingdom.controller.yad2/create-check: "true"
-    pingdom.controller.yad2/custom-path: /status
+    pingdom.controller.yad2/custom-path: /
     pingdom.controller.yad2/integrationids: ""
     pingdom.controller.yad2/protocol: http
     pingdom.controller.yad2/probe-filters: EU

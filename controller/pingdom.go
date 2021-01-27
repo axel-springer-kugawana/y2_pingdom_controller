@@ -56,11 +56,13 @@ type responsePingdomCheck struct {
 
 type PingdomEngine struct {
 	incomingIngress  chan *extensions.Ingress
+	deleteIngress  chan string
 }
 
 func NewPingdomEngine() *PingdomEngine {
 	return &PingdomEngine{
 		incomingIngress:  make(chan *extensions.Ingress),
+		deleteIngress: make(chan string),
 	}
 }
  var pClient = &pingdomClient{
@@ -73,6 +75,8 @@ func (p *PingdomEngine) Run() {
 		select {
 		case ing := <-p.incomingIngress:
 			applyNewCheck(ing)
+		case ingName := <-p.deleteIngress:
+			deleteCheck(ingName)
 		}
 	}
 }
@@ -135,44 +139,27 @@ func applyNewCheck(ing *extensions.Ingress) {
 	}
 
 	log.Println(string(jsonValue))
-
-	client := &http.Client{}
-	req, _ := http.NewRequest(method, pingdomUrl, bytes.NewBuffer(jsonValue))
-	req.Header.Set("Authorization", "Bearer " + pClient.token)
-	req.Header.Set("Content-Type", "application/json")
-	res, err := client.Do(req)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if err := json.Unmarshal(body, &res); err != nil {
-		panic(err)
-	}
-
-	switch res.StatusCode {
-	case 200:
-		log.Printf("Succefully applied check %s", ing.Name)
-		break
-	case 404:
-		log.Printf("Not found!")
-		break
-	default:
-		log.Printf("Got response: %s", res.Status)
-	}
+	sendPingdomRequest(method, pingdomUrl, jsonValue)
 }
 
+ func deleteCheck(ingName string){
+	 if checkID := getCheckID(ingName); checkID != "" {
+	 	message := `{"message": "Deletion of the check `+ingName+` was successful!"}`
+		 sendPingdomRequest("DELETE", pClient.endpoint + "/" + checkID, []byte(message))
+	 } else {
+		 log.Printf("\nCannot find %s, delete failed\n", ingName)
+	 }
+ }
+
 func getCheckID(checkName string) string {
+	log.Printf("Sending request to pingdom to get check id")
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", pClient.endpoint, nil)
 	req.Header.Set("Authorization", "Bearer " + pClient.token)
 	res, err := client.Do(req)
 
 	if err != nil {
+		log.Printf("git check id resutl")
 		log.Fatalln(err)
 	}
 	body, err := ioutil.ReadAll(res.Body)
@@ -180,7 +167,6 @@ func getCheckID(checkName string) string {
 		log.Fatalln(err)
 		return ""
 	}
-
 	var pingdomChecks responsePingdomCheck
 	if err := json.Unmarshal(body, &pingdomChecks); err != nil {
 		panic(err)
@@ -192,3 +178,38 @@ func getCheckID(checkName string) string {
 	}
 	return ""
 }
+
+ func sendPingdomRequest(method, url string, body []byte){
+	 log.Printf("\nSending request to pingdom %s\n", url)
+
+	 req := &http.Request{}
+	 req, _ = http.NewRequest(method, url, bytes.NewBuffer(body))
+	 req.Header.Set("Authorization", "Bearer " + pClient.token)
+	 req.Header.Set("Content-Type", "application/json")
+
+	 client := &http.Client{}
+	 res, err := client.Do(req)
+
+	 if err != nil {
+		 log.Fatalln(err)
+	 }
+	 body, err = ioutil.ReadAll(res.Body)
+	 if err != nil {
+		 log.Fatalln(err)
+	 }
+
+	 if err := json.Unmarshal(body, &res); err != nil {
+		 panic(err)
+	 }
+
+	 switch res.StatusCode {
+	 case 200:
+		 log.Printf("Succefully %s request on check %s", method, body)
+		 break
+	 case 404:
+		 log.Printf("Not found!")
+		 break
+	 default:
+		 log.Printf("Got response: %s", res.Status)
+	 }
+ }

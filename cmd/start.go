@@ -29,13 +29,8 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Start Pingdom Controller",
+	Long: "Start Pingdom Controller",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		npe := controller.NewPingdomEngine()
@@ -44,7 +39,7 @@ to quickly create a Cobra application.`,
 		go controller.IngressInformerFactory(npe)
 
 		r := mux.NewRouter()
-		r.HandleFunc("/-/health", controller.Health).Methods("GET")
+		r.HandleFunc("/health", controller.Health).Methods("GET")
 
 		log.Printf("\nListenAndServe...")
 		err := http.ListenAndServe(":" + os.Getenv("PORT"), nil)

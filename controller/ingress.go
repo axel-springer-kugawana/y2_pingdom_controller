@@ -1,26 +1,19 @@
 package controller
 
 import (
-	"fmt"
-	"log"
-
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
 	utils "pingdom_controller/general"
 	extensions "k8s.io/api/extensions/v1beta1"
 )
 
-type IngressMetadata struct {
-	Metadata   struct {
-		Name        string `yaml:"name"`
-		Annotations struct {
-			AnnotationsMap map[string]string
-		} `yaml:"annotations"`
-	}
-}
+var(
+	createEvent = "create"
+	updateEvent = "update"
+	deleteEvent = "delete"
+)
 
 func IngressInformerFactory(pc *PingdomEngine) {
-	fmt.Printf("Inside StreamDeployments func\n")
 	kubeclient := GetKubeClient()
 
 	factory := informers.NewSharedInformerFactory(kubeclient, 0)
@@ -29,21 +22,27 @@ func IngressInformerFactory(pc *PingdomEngine) {
 	defer close(stopper)
 	ingressInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			ing := obj.(*extensions.Ingress)
-			createPingdomCheck, _ := utils.GetAnnotationValue(ing.Annotations, "create-check")
-			if createPingdomCheck == "true"{
-				pc.incomingIngress <- ing
-			}
+			ingressEvent(obj, pc, createEvent)
 		},
 		UpdateFunc: func(old, new interface{}) {
-			ing := new.(*extensions.Ingress)
-			createPingdomCheck, _ := utils.GetAnnotationValue(ing.Annotations, "create-check")
-			if createPingdomCheck == "true"{
-				pc.incomingIngress <- ing
-			}
+			ingressEvent(new, pc, updateEvent)
 		},
-		DeleteFunc: func(obj interface{}) {log.Printf("\nIn DeleteFunc")},
+		DeleteFunc: func(obj interface{}) {
+			ingressEvent(obj, pc, deleteEvent)
+		},
 	})
-
 	ingressInformer.Informer().Run(stopper)
+}
+
+func ingressEvent(obj interface{}, pc *PingdomEngine, event string){
+	ing := obj.(*extensions.Ingress)
+	createPingdomCheck, _ := utils.GetAnnotationValue(ing.Annotations, "create-check")
+	if createPingdomCheck == "true"{
+		switch event {
+		case createEvent, updateEvent:
+			pc.incomingIngress <- ing
+		case deleteEvent:
+			pc.deleteIngress <- ing.Name
+		}
+	}
 }
