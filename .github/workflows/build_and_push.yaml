@@ -32,7 +32,6 @@ jobs:
         with:
           dockerfile: Dockerfile
           context: .
-          create_repo: public.ecr.aws/l3s2y4l6/y2-pingdom-controller
           tags: |
             public.ecr.aws/d7p2r8s3/${{ steps.repoName.outputs.reponame }}:latest
             public.ecr.aws/d7p2r8s3/${{ steps.repoName.outputs.reponame }}:${{ steps.sha.outputs.sha7 }}
