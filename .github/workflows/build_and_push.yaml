@@ -1,22 +1,38 @@
-name: Build and Push Teleskope backend
+name: ECR
 on:
   push:
     branches:
-      - master
+      - main
+  schedule:
+    - cron: 37 * * * *
+  workflow_dispatch: {}
 
 jobs:
-  build-and-deploy:
+  ecr_public:
     runs-on: ubuntu-latest
+    name: ECR public action
     steps:
-      - name: checkout
+      - name: Get repo name
+        id: repoName
+        run: echo "::set-output name=reponame::$(echo ${{github.repository}} | cut -d '/' -f 2)"
+      - name: Get short SHA
+        id: sha
+        run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"
+      - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          ref: master
-      - name: build and push
-        uses: docker/build-push-action@v1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Build and Push to ECR public
+        id: build-and-push
+        uses: pahud/ecr-public-action@8cd826db40befb59b0cd0b60b22a7ba72d06a7f7
         with:
-          username: ${{ secrets.AWS_ECR_USERNAME }}
-          password: ${{ secrets.AWS_ECR_PASSWORD }}
-          repository: public.ecr.aws/l3s2y4l6/y2-pingdom-controller
-          tag_with_ref: true
-          tag_with_sha: true
+          dockerfile: Dockerfile
+          context: .
+          create_repo: public.ecr.aws/l3s2y4l6/y2-pingdom-controller
+          tags: |
+            public.ecr.aws/d7p2r8s3/${{ steps.repoName.outputs.reponame }}:latest
+            public.ecr.aws/d7p2r8s3/${{ steps.repoName.outputs.reponame }}:${{ steps.sha.outputs.sha7 }}
