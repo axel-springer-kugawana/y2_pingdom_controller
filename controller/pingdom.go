@@ -30,6 +30,7 @@ type pingdomCheck struct {
 type newPingdomCheck struct {
 	pingdomCheck
 	Type           string   `json:"type"`
+	Port           int      `json:"port,omitempty"`
 }
 
 type responsePingdomCheck struct {
@@ -68,6 +69,11 @@ func NewPingdomEngine() *PingdomEngine {
  var pClient = &pingdomClient{
  	 endpoint: os.Getenv("PINGDOM_ENDPOINT"),
 	 token: os.Getenv("PINGDOM_TOKEN"),
+ }
+
+ var protocolToIP = map[string]int{
+	 "http": 80,
+	 "https": 443,
  }
 
 func (p *PingdomEngine) Run() {
@@ -114,8 +120,7 @@ func applyNewCheck(ing *extensions.Ingress) {
 		proto = os.Getenv("PINGDOM_PROTOCOL")
 	}
 	customPath, _ := utils.GetAnnotationValue(ing.Annotations, "custom-path")
-
-	var newPingdomCheck = newPingdomCheck{}
+	var npc = newPingdomCheck{}
 	var pingdomUrl = pClient.endpoint
 	var method = "POST"
 	var jsonValue []byte
@@ -127,15 +132,17 @@ func applyNewCheck(ing *extensions.Ingress) {
 		Integrationids: integrationids,
 		ProbeFilters: probeFilters,
 	}
+   npc.Port = protocolToIP[proto]
 
 	if checkID := getCheckID(ing.Name); checkID != "" {
 		pingdomUrl += "/" + checkID
 		method = "PUT"
+		npc.Type = proto
 		jsonValue, _ = json.Marshal(pc)
 	} else {
-		newPingdomCheck.pingdomCheck = pc
-		newPingdomCheck.Type = proto
-		jsonValue, _ = json.Marshal(newPingdomCheck)
+		npc.pingdomCheck = pc
+		npc.Type = proto
+		jsonValue, _ = json.Marshal(npc)
 	}
 
 	log.Println(string(jsonValue))
