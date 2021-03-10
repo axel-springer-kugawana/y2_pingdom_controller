@@ -25,12 +25,12 @@ type pingdomCheck struct {
 	Integrationids []int    `json:"integrationids"`
 	ProbeFilters   []string `json:"probe_filters"`
 	CustomPath     string   `json:"url"`
+	Port           int      `json:"port,omitempty"`
 }
 
 type newPingdomCheck struct {
 	pingdomCheck
 	Type           string   `json:"type"`
-	Port           int      `json:"port,omitempty"`
 }
 
 type responsePingdomCheck struct {
@@ -131,8 +131,8 @@ func applyNewCheck(ing *extensions.Ingress) {
 		CustomPath: customPath,
 		Integrationids: integrationids,
 		ProbeFilters: probeFilters,
+		Port: protocolToIP[proto],
 	}
-   npc.Port = protocolToIP[proto]
 
 	if checkID := getCheckID(ing.Name); checkID != "" {
 		pingdomUrl += "/" + checkID
