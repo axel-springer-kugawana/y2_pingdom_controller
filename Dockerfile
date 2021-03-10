@@ -1,4 +1,4 @@
-FROM golang:latest AS builder
+FROM golang:1.15.8 AS builder
 
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 WORKDIR /go/src/pingdom_controller
