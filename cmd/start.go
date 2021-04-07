@@ -33,6 +33,9 @@ var startCmd = &cobra.Command{
 	Long: "Start Pingdom Controller",
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// Enable line numbers in logging
+		log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 		npe := controller.NewPingdomEngine()
 		go npe.Run()
 

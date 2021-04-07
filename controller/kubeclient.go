@@ -16,7 +16,7 @@ func GetKubeClient() *kubernetes.Clientset{
 	cfg, err = rest.InClusterConfig()
 	home := homeDir()
 	if err != nil && home != "" {
-		cfg, err = clientcmd.BuildConfigFromFlags("", home+"/.kube/config")
+		cfg, err = clientcmd.BuildConfigFromFlags("", home+"/.kube/k3s")
 		ExitOnErr(err)
 	} else {
 		cfg, err = clientcmd.BuildConfigFromFlags("", "")

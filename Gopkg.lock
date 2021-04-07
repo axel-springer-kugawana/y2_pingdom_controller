@@ -183,6 +183,14 @@
   version = "v1.8.1"
 
 [[projects]]
+  digest = "1:0d275a83773197288096d8ab77c2fec7974242fff73d8a76a255bbe2b956fa19"
+  name = "github.com/russellcardullo/go-pingdom"
+  packages = ["pingdom"]
+  pruneopts = "UT"
+  revision = "ab125ed5e611b6228ebcd96b13ca4748d63fd3cb"
+  version = "v1.3.0"
+
+[[projects]]
   digest = "1:e76b197a689daae40d3b3597319b3b66e29c94eccda6461b1c97e2524cf3630b"
   name = "github.com/spf13/afero"
   packages = [
@@ -634,6 +642,7 @@
   input-imports = [
     "github.com/gorilla/mux",
     "github.com/mitchellh/go-homedir",
+    "github.com/russellcardullo/go-pingdom/pingdom",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
     "k8s.io/api/extensions/v1beta1",

@@ -34,15 +34,17 @@ func IngressInformerFactory(pc *PingdomEngine) {
 	ingressInformer.Informer().Run(stopper)
 }
 
-func ingressEvent(obj interface{}, pc *PingdomEngine, event string){
+func ingressEvent(obj interface{}, pe *PingdomEngine, event string){
 	ing := obj.(*extensions.Ingress)
-	createPingdomCheck, _ := utils.GetAnnotationValue(ing.Annotations, "create-check")
+	createPingdomCheck := utils.GetAnnotationValue(ing.Annotations, "apply")
 	if createPingdomCheck == "true"{
 		switch event {
-		case createEvent, updateEvent:
-			pc.incomingIngress <- ing
+		case createEvent:
+			pe.addIngress <- ing
+		case updateEvent:
+			pe.updateIngress <- ing
 		case deleteEvent:
-			pc.deleteIngress <- ing.Name
+			pe.deleteIngress <- ing.Name
 		}
 	}
 }
