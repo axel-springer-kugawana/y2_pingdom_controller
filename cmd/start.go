@@ -16,13 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"os"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
-
 	"pingdom_controller/controller"
 )
 

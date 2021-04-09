@@ -6,12 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	extensions "k8s.io/api/extensions/v1beta1"
-
 	utils "pingdom_controller/general"
-
+	extensions "k8s.io/api/extensions/v1beta1"
 	"github.com/russellcardullo/go-pingdom/pingdom"
 )
+
 type PingdomEngine struct {
 	addIngress  chan *extensions.Ingress
 	updateIngress  chan *extensions.Ingress
@@ -65,6 +64,7 @@ func (p *PingdomEngine) Run() {
 	 if checkID := getCheckID(ing.Name); checkID != "" {
 		 log.Printf("\nCheck with the name %s is already exist. Starting update operation\n", ing.Name)
 		 updateCheck(ing)
+		 return
 	 }
 
 	 pct := createPingdomCheckType(ing)
@@ -95,7 +95,7 @@ func extractAndBuildArrayOfIntegers(ing *extensions.Ingress, annotate string) []
 	return userInputAsArray
 }
 
- func updateCheck(ing *extensions.Ingress){
+func updateCheck(ing *extensions.Ingress){
 	 pct := createPingdomCheckType(ing)
 	 if checkID := getCheckID(pct.Name); checkID != "" {
 		 msg, err := client.Checks.Update(utils.StringToInt(checkID), &pct)
@@ -108,9 +108,9 @@ func extractAndBuildArrayOfIntegers(ing *extensions.Ingress, annotate string) []
 		 log.Printf("\nCannot find %s check, update failed. Starting create operation\n", ing.Name)
 		 createNewCheck(ing)
 	 }
- }
+}
 
- func deleteCheck(ingName string){
+func deleteCheck(ingName string){
 	 if checkID := getCheckID(ingName); checkID != "" {
 	 	msg, err := client.Checks.Delete(utils.StringToInt(checkID))
 	 	if err != nil{
@@ -121,7 +121,7 @@ func extractAndBuildArrayOfIntegers(ing *extensions.Ingress, annotate string) []
 	 } else {
 		 log.Printf("\nCannot find %s check, delete failed\n", ingName)
 	 }
- }
+}
 
 func getCheckID(checkName string) string {
 	checks, _ := client.Checks.List()

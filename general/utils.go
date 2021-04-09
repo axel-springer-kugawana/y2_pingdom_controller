@@ -4,7 +4,6 @@ import (
 	"log"
 	"strconv"
 	"strings"
-
 )
 
 func GetAnnotationValue (annotations map[string]string, contains string) string{
@@ -14,7 +13,6 @@ func GetAnnotationValue (annotations map[string]string, contains string) string{
 			return v
 		}
 	}
-	log.Printf("Annotation with %s not found", contains)
 	return ""
 }
 
@@ -31,7 +29,7 @@ func StringToBool(str string) bool{
 	var result bool
 	var err error
 	if result, err = strconv.ParseBool(str); err != nil {
-		log.Printf("Cannot convert String to Boolen %s" , str)
+		log.Printf("Cannot convert String to Boolean %s" , str)
 		return false
 	}
 	return result
