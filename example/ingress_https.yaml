@@ -9,9 +9,9 @@ metadata:
     pingdom.controller.yad2/resolution: "1"
     pingdom.controller.yad2/custom-path: /custom # optional
     pingdom.controller.yad2/encryption: "true" # optional
-    pingdom.controller.yad2/integrationids: ""#"92247" # optional
+    pingdom.controller.yad2/integrationids: "" # optional
     pingdom.controller.yad2/probe-filters: "region: EU" # optional
-    pingdom.controller.yad2/port: "80" # optional
+    pingdom.controller.yad2/port: "443" # optional
     pingdom.controller.yad2/teamids: "" # optional
     pingdom.controller.yad2/paused: "false" # optional
     pingdom.controller.yad2/verify-certificate: "true" # optional
