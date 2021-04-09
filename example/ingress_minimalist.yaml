@@ -2,11 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: nginx-controller-internal
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     pingdom.controller.yad2/apply: "true"
-    pingdom.controller.yad2/encryption: "true"
     pingdom.controller.yad2/resolution: "1"
   name: pingdom-controller
 spec:
@@ -16,5 +12,5 @@ spec:
         paths:
           - backend:
               serviceName: kubernetes-dashboard
-              servicePort: https
+              servicePort: http
             path: /
