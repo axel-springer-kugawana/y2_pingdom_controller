@@ -30,7 +30,7 @@ import (
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start Pingdom Controller",
-	Long: "Start Pingdom Controller",
+	Long:  "Start Pingdom Controller",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Enable line numbers in logging
@@ -45,7 +45,7 @@ var startCmd = &cobra.Command{
 		r.HandleFunc("/health", controller.Health).Methods("GET")
 
 		log.Printf("\nListenAndServe...")
-		err := http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+		err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}

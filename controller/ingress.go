@@ -1,13 +1,13 @@
 package controller
 
 import (
+	extensions "k8s.io/api/extensions/v1beta1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
 	utils "pingdom_controller/general"
-	extensions "k8s.io/api/extensions/v1beta1"
 )
 
-var(
+var (
 	createEvent = "create"
 	updateEvent = "update"
 	deleteEvent = "delete"
@@ -35,10 +35,10 @@ func IngressInformerFactory(pc *PingdomEngine) {
 	ingressInformer.Informer().Run(stopper)
 }
 
-func ingressEvent(obj interface{}, pe *PingdomEngine, event string){
+func ingressEvent(obj interface{}, pe *PingdomEngine, event string) {
 	ing := obj.(*extensions.Ingress)
 	createPingdomCheck := utils.GetAnnotationValue(ing.Annotations, "apply")
-	if createPingdomCheck == "true"{
+	if createPingdomCheck == "true" {
 		switch event {
 		case createEvent:
 			pe.addIngress <- ing
