@@ -1,6 +1,6 @@
 # y2_pingdom_controller
 
-[![CI](https://github.com/axel-springer-kugawana/y2_pingdom_controller/workflows/ECR/badge.svg)](https://github.com/axel-springer-kugawana/y2_pingdom_controller/actions?query=workflow%3Aci+branch%3Amain)
+[![CI](https://github.com/axel-springer-kugawana/y2_pingdom_controller/workflows/ECR/badge.svg)](https://github.com/axel-springer-kugawana/y2_pingdom_controller/actions?query=workflow%3AECR+branch%3Amain)
 [![Go Report Card](https://goreportcard.com/badge/github.com/axel-springer-kugawana/y2_pingdom_controller)](https://goreportcard.com/report/github.com/axel-springer-kugawana/y2_pingdom_controller)
 
 y2_pingdom_controller is a kubernetes controller that can create HTTP checks for [Pingdom](https://www.pingdom.com/).   
