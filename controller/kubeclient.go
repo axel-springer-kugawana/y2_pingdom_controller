@@ -9,7 +9,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
-
+// GetKubeClient build a kube client
 func GetKubeClient() *kubernetes.Clientset{
 	var cfg *rest.Config
 	var err error
@@ -17,14 +17,14 @@ func GetKubeClient() *kubernetes.Clientset{
 	home := homeDir()
 	if err != nil && home != "" {
 		cfg, err = clientcmd.BuildConfigFromFlags("", home+"/.kube/k3s")
-		ExitOnErr(err)
+		exitOnErr(err)
 	} else {
 		cfg, err = clientcmd.BuildConfigFromFlags("", "")
-		ExitOnErr(err)
+		exitOnErr(err)
 	}
 
 	kubeclient, err := kubernetes.NewForConfig(cfg)
-	ExitOnErr(err)
+	exitOnErr(err)
 
 	return kubeclient
 }
@@ -36,7 +36,7 @@ func homeDir() string {
 	return os.Getenv("USERPROFILE") // windows
 }
 
-func ExitOnErr(err error) {
+func exitOnErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}

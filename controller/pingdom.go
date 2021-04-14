@@ -10,13 +10,14 @@ import (
 	extensions "k8s.io/api/extensions/v1beta1"
 	"github.com/russellcardullo/go-pingdom/pingdom"
 )
-
+// PingdomEngine struct
 type PingdomEngine struct {
 	addIngress  chan *extensions.Ingress
 	updateIngress  chan *extensions.Ingress
 	deleteIngress  chan string
 }
 
+// NewPingdomEngine is running a channel for each event
 func NewPingdomEngine() *PingdomEngine {
 	return &PingdomEngine{
 		addIngress:  make(chan *extensions.Ingress),
