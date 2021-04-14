@@ -13,6 +13,7 @@ var(
 	deleteEvent = "delete"
 )
 
+// IngressInformerFactory starting informer for any Ingress events
 func IngressInformerFactory(pc *PingdomEngine) {
 	kubeclient := GetKubeClient()
 
