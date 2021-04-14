@@ -1,16 +1,16 @@
-
 package controller
 
 import (
 	"log"
 	"os"
 
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
+
 // GetKubeClient build a kube client
-func GetKubeClient() *kubernetes.Clientset{
+func GetKubeClient() *kubernetes.Clientset {
 	var cfg *rest.Config
 	var err error
 	cfg, err = rest.InClusterConfig()
