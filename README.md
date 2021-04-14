@@ -1,5 +1,7 @@
 # y2_pingdom_controller
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/axel-springer-kugawana/y2_pingdom_controller)](https://goreportcard.com/report/github.com/axel-springer-kugawana/y2_pingdom_controller)
+
 y2_pingdom_controller is a kubernetes controller that can create HTTP checks for [Pingdom](https://www.pingdom.com/).   
 **Important:** The current version supports working with HTTP check only.
 
