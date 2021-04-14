@@ -30,6 +30,7 @@ var client, _ = pingdom.NewClientWithConfig(pingdom.ClientConfig{
 APIToken: os.Getenv("PINGDOM_TOKEN"),
 })
 
+// Run will start PingdomEngine's channels
 func (p *PingdomEngine) Run() {
 	for {
 		select {
