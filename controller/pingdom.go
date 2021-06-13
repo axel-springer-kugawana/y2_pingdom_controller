@@ -49,16 +49,16 @@ func createPingdomCheckType(ing *extensions.Ingress) pingdom.HttpCheck {
 	check := pingdom.HttpCheck{
 		Name:              ing.Name,
 		Hostname:          ing.Spec.Rules[0].Host,
-		Resolution:        utils.StringToInt(utils.GetAnnotationValue(ing.Annotations, "resolution")),
-		Paused:            utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "paused")),
-		Encryption:        utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "encryption")),
-		Url:               utils.GetAnnotationValue(ing.Annotations, "custom-path"),
-		Port:              utils.StringToInt(utils.GetAnnotationValue(ing.Annotations, "port")),
-		IntegrationIds:    extractAndBuildArrayOfIntegers(ing, "integrationids"),
-		Tags:              utils.GetAnnotationValue(ing.Annotations, "port"),
-		ProbeFilters:      utils.GetAnnotationValue(ing.Annotations, "probe-filters"),
-		TeamIds:           extractAndBuildArrayOfIntegers(ing, "teamids"),
-		VerifyCertificate: utils.GetBoolPointer(utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "verify-certificate"))),
+		Resolution:        utils.StringToInt(utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/resolution")),
+		Paused:            utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/paused")),
+		Encryption:        utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/encryption")),
+		Url:               utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/custom-path"),
+		Port:              utils.StringToInt(utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/port")),
+		IntegrationIds:    extractAndBuildArrayOfIntegers(ing, "pingdom.controller.yad2/integrationids"),
+		Tags:              utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/port"),
+		ProbeFilters:      utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/probe-filters"),
+		TeamIds:           extractAndBuildArrayOfIntegers(ing, "pingdom.controller.yad2/teamids"),
+		VerifyCertificate: utils.GetBoolPointer(utils.StringToBool(utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/verify-certificate"))),
 	}
 	return check
 }
@@ -133,6 +133,5 @@ func getCheckID(checkName string) string {
 			return strconv.Itoa(check.ID)
 		}
 	}
-	log.Printf("\nCannot find %s check\n", checkName)
 	return ""
 }
