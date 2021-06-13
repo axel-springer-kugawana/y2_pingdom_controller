@@ -37,7 +37,7 @@ func IngressInformerFactory(pc *PingdomEngine) {
 
 func ingressEvent(obj interface{}, pe *PingdomEngine, event string) {
 	ing := obj.(*extensions.Ingress)
-	createPingdomCheck := utils.GetAnnotationValue(ing.Annotations, "apply")
+	createPingdomCheck := utils.GetAnnotationValue(ing.Annotations, "pingdom.controller.yad2/apply")
 	if createPingdomCheck == "true" {
 		switch event {
 		case createEvent:
