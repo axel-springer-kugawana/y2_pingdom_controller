@@ -133,6 +133,5 @@ func getCheckID(checkName string) string {
 			return strconv.Itoa(check.ID)
 		}
 	}
-	os.Exit(0)
 	return ""
 }
