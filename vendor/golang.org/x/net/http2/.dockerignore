@@ -1,0 +1,9 @@
+**/.git
+**/.gitignore
+**/.circleci/
+**/.gitlab-ci.*
+**/.env*
+**/docker-compose*
+Dockerfile*
+.dockerignore
+Jenkinsfile
