@@ -1,2 +1,11 @@
 cmd/tomll/tomll
 cmd/tomljson/tomljson
+**/.git
+**/.gitignore
+**/.circleci/
+**/.gitlab-ci.*
+**/.env*
+**/docker-compose*
+Dockerfile*
+.dockerignore
+Jenkinsfile
