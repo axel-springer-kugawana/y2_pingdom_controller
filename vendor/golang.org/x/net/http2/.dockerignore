@@ -1,5 +1,3 @@
-.github/
-.idea/
 **/.git
 **/.gitignore
 **/.circleci/
